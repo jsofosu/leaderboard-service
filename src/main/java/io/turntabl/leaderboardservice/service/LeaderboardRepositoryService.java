@@ -14,6 +14,7 @@ public class LeaderboardRepositoryService {
     private final ProfileRepository profileRepository;
 
     public List<Profile> getProfiles() {
+
         return profileRepository.findAll();
     }
 }

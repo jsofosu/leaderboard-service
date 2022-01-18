@@ -24,6 +24,7 @@ class LeaderboardRepositoryServiceTest {
 
     @BeforeEach
     void setUp() {
+
         underTest = new LeaderboardRepositoryService(profileRepository);
     }
 
@@ -33,7 +34,8 @@ class LeaderboardRepositoryServiceTest {
         Profile profile1 = mock(Profile.class);
         Profile profile2 = mock(Profile.class);
 
-        when(profileRepository.findAll()).thenReturn(List.of(profile1, profile2));
+        when(profileRepository.findAll())
+                .thenReturn(List.of(profile1, profile2));
 
         // when
         List<Profile> result = underTest.getProfiles();

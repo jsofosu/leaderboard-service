@@ -17,6 +17,7 @@ public class LeaderboardController {
 
     @GetMapping
     public List<ProfileDto> getLeaderboard() {
+
         return leaderboardFacade.getLeaderboard();
     }
 }
