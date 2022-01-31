@@ -1,51 +1,62 @@
 package io.turntabl.leaderboardservice.controller;
-
-import io.turntabl.leaderboardservice.controller.response.LanguageLevelDto;
 import io.turntabl.leaderboardservice.controller.response.ProfileDto;
 import io.turntabl.leaderboardservice.converter.ProfileToProfileDtoConverter;
-import io.turntabl.leaderboardservice.model.LanguageLevel;
-import io.turntabl.leaderboardservice.repository.ProfileRepository;
+import io.turntabl.leaderboardservice.model.Profile;
 import io.turntabl.leaderboardservice.service.LeaderboardRepositoryService;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 
 @ExtendWith(MockitoExtension.class)
 class LeaderboardFacadeTest {
-    @Mock
-    private ProfileRepository profileRepository;
+//    @Autowired
+//    private LeaderboardFacade leaderboardFacade;
+//
+//    @MockBean
+//    private LeaderboardRepositoryService leaderboardRepositoryService;
+//
+//    @MockBean
+//    private ProfileToProfileDtoConverter profileToProfileDtoConverter;
+//
+//    @Test
+//    void testGetLeaderboard() {
+//        when(this.leaderboardRepositoryService.getProfiles()).thenReturn(new ArrayList<>());
+//        assertTrue(this.leaderboardFacade.getLeaderboard().isEmpty());
+//        verify(this.leaderboardRepositoryService).getProfiles();
+//    }
 
-    @InjectMocks
+    @Mock
     private LeaderboardRepositoryService leaderboardRepositoryService;
 
     @Mock
     ProfileToProfileDtoConverter profileToProfileDtoConverter;
 
-
-    LeaderboardFacade underTest;
+ @Autowired
+  private  LeaderboardFacade underTest;
 
     @BeforeEach
     void setUp(){
+
         underTest = new LeaderboardFacade(leaderboardRepositoryService, profileToProfileDtoConverter);
     }
 
-    @Test
+       @Test
     void shouldGetLeaderBoard(){
 
         //given a profileDto
@@ -53,25 +64,37 @@ class LeaderboardFacadeTest {
                 .username("laimeraatt")
                 .name("Ana Lameira")
                 .clan("lalal")
-                .honour(34)
+               .honour(34)
                 .overallRank(23)
                 .build();
 
-        List<ProfileDto> expectedResponse = List.of(profileDto);
+           Profile profile = new Profile();
+           profile.setClan("lalal");
 
-        when (profileRepository.findAll().stream()
-                .map(profileToProfileDtoConverter::convert).toList()).thenReturn(expectedResponse);
+       List<ProfileDto> expectedResponse = List.of(profileDto);
+           List<Profile> expectedResponse1 = List.of(profile);
 
+        /*when (leaderboardRepositoryService.getProfiles().stream()
+                .map(profileToProfileDtoConverter::convert)
+                .collect(toList())).thenReturn(expectedResponse);*/
+
+           when (leaderboardRepositoryService.getProfiles()).thenReturn(List.of(profile));
         //when
-       // List<ProfileDto> result = underTest.getLeaderboard();
-        List<ProfileDto> result = leaderboardRepositoryService.getProfiles()
-                .stream().map(profileToProfileDtoConverter::convert).toList();
+        List<ProfileDto> result = underTest.getLeaderboard();
+
 
         System.out.println(result);
         //then
-        //assertThat(result).containsExactly(profileDto);
-       assertEquals(result, expectedResponse, () -> "alalalalslas");
+           List<ProfileDto> dtos = expectedResponse1.stream().map(profileToProfileDtoConverter::convert).toList();
+         // assertThat(result).containsExactly(dtos);
+           assertEquals(result, dtos);
+//       assertEquals(result, expectedResponse, () -> "alalalalslas");
 
     }
+    }
 
-}
+
+
+
+
+
